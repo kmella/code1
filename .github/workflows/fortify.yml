@@ -27,7 +27,7 @@ jobs:
       actions: read
       contents: read
       security-events: write
-
+      pull-requests: write
     steps:
       # Check out source code
       - name: Check Out Source Code
@@ -42,7 +42,7 @@ jobs:
 
       # Perform Fortify on Demand SAST + SCA scan and import SAST results into GitHub code scanning alerts
       - name: Run FoD SAST Scan
-        uses: fortify/github-action@v1
+        uses: fortify/github-action@v1.3.1
         with:
           sast-scan: true
         env:
@@ -50,6 +50,11 @@ jobs:
           FOD_TENANT: ${{secrets.FOD_TENANT}}
           FOD_USER: ${{secrets.FOD_USER}}
           FOD_PASSWORD: ${{secrets.FOD_PAT}}
-          FOD_RELEASE: ${{ secrets.FOD_RELEASE_ID }}
+          #FOD_RELEASE: ${{ secrets.FOD_RELEASE_ID }}
           EXTRA_PACKAGE_OPTS: -oss
           DO_EXPORT: true
+          DO_SETUP: true
+          DO_JOB_SUMMARY: true
+          DO_PR_COMMENT: true
+          #DO_POLICY_CHECK: true
+          SETUP_EXTRA_OPTS: --sdlc-status Development --scan-types sast
